@@ -17,7 +17,7 @@ const LandingPage = () => {
           onClick={() => navigate('/admin')}
           className="w-full py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition"
         >
-          Admin Login
+          Login
         </button>
       </div>
     </div>
