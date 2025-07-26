@@ -1,15 +1,38 @@
 import { useState } from 'react'
+import { clockIn, clockOut } from '../services/attendanceService'
 
 const PunchPage = () => {
   const [pin, setPin] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleClockIn = () => {
-    setMessage(`⏱ Clock In clicked with PIN: ${pin}`)
+  const handleClockIn = async () => {
+    setLoading(true)
+    setError('')
+    setMessage('')
+    try {
+      const result = await clockIn(pin)
+      setMessage(`✅ Clocked in at ${result?.clock_in || '...time not returned'}`)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleClockOut = () => {
-    setMessage(`🔁 Clock Out clicked with PIN: ${pin}`)
+  const handleClockOut = async () => {
+    setLoading(true)
+    setError('')
+    setMessage('')
+    try {
+      const result = await clockOut(pin)
+      setMessage(`✅ Clocked out at ${result?.clock_out || '...time not returned'}`)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -25,18 +48,22 @@ const PunchPage = () => {
       <div className="flex space-x-4 mb-6">
         <button
           onClick={handleClockIn}
+          disabled={loading}
           className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition"
         >
           Clock In
         </button>
         <button
           onClick={handleClockOut}
+          disabled={loading}
           className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition"
         >
           Clock Out
         </button>
       </div>
-      {message && <p className="text-gray-700">{message}</p>}
+
+      {message && <p className="text-green-700 font-medium">{message}</p>}
+      {error && <p className="text-red-600 font-medium">{error}</p>}
     </div>
   )
 }
