@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { clockIn, clockOut } from '../services/attendanceService'
 
 const PunchPage = () => {
@@ -7,7 +7,17 @@ const PunchPage = () => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const DUMMY_EMPLOYEE_ID = "a2281aa3-d25b-4b28-abfc-8d0cba1c68d3"
+  useEffect(() => {
+    if (message || error) {
+      const timer = setTimeout(() => {
+        setMessage('')
+        setError('')
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [message, error])
+
+  const DUMMY_EMPLOYEE_ID = 'a2281aa3-d25b-4b28-abfc-8d0cba1c68d3'
 
   const handleClockIn = async () => {
     setLoading(true)
@@ -64,8 +74,19 @@ const PunchPage = () => {
         </button>
       </div>
 
-      {message && <p className="text-green-700 font-medium">{message}</p>}
-      {error && <p className="text-red-600 font-medium">{error}</p>}
+      {loading && <p className="text-gray-500">Processing...</p>}
+
+      {message && (
+        <div className="text-green-700 flex items-center gap-2 font-medium">
+          <span>✅</span> <span>{message}</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="text-red-600 flex items-center gap-2 font-medium">
+          <span>❌</span> <span>{error}</span>
+        </div>
+      )}
     </div>
   )
 }
