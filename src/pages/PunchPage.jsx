@@ -7,12 +7,14 @@ const PunchPage = () => {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const DUMMY_EMPLOYEE_ID = "a2281aa3-d25b-4b28-abfc-8d0cba1c68d3"
+
   const handleClockIn = async () => {
     setLoading(true)
     setError('')
     setMessage('')
     try {
-      const result = await clockIn(pin)
+      const result = await clockIn(DUMMY_EMPLOYEE_ID, pin)
       setMessage(`✅ Clocked in at ${result?.clock_in || '...time not returned'}`)
     } catch (err) {
       setError(err.message)
@@ -26,7 +28,7 @@ const PunchPage = () => {
     setError('')
     setMessage('')
     try {
-      const result = await clockOut(pin)
+      const result = await clockOut(DUMMY_EMPLOYEE_ID, pin)
       setMessage(`✅ Clocked out at ${result?.clock_out || '...time not returned'}`)
     } catch (err) {
       setError(err.message)
